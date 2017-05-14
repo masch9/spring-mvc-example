@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8"/>
+<title>Dashboard</title>
+</head>
+<body>
+	<form action="#" method="post" enctype="multipart/form-data">
+       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+       <input class="text_input" type="text" name="firstName" placeholder="First Name"/>
+       <br/><input class="text_input" type="text" name="lastName" placeholder="Last Name"/>
+       <br/><input class="text_input" type="text" name="age" placeholder="Age"/>
+       <br/><p>Alive:<input class="text_input" type="checkbox" name="alive"/></p>
+       <input type="submit" value="Add a New Person"/>
+   </form>
+
+	<table border="1">
+		<thead>
+			<tr>
+			  <th>Index</th>
+		      <th>Vorname</th>
+		      <th>Nachname</th>
+		      <th>Alter</th>
+		      <th>Lebendig</th>
+		    </tr>
+		</thead>
+		<tr th:each="p,index : ${testPersonList}">
+	      <td th:text="${index.index}">Index</td>
+	      <td th:text="${p.firstName}">Vorname</td>
+	      <td th:text="${p.lastName}">Nachname</td>
+	      <td th:text="${p.age}">Alter</td>
+	      <td th:text="${p.alive} ? 'lebend' : 'verstorben'">Lebendig</td>
+	      <td>
+	      	<form action="#" th:method="delete">
+	      		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+	      		<input type="hidden" th:value="${index.index}" name="index" />
+	      		<input type="submit" value="Delete"/>
+	      	</form>
+	      </td>
+	    </tr>
+	</table>
+	
+	<h2>Eine Auflistung der lebendigen Personen aus der Liste</h2>
+	<table border="1">
+		<thead>
+			<tr>
+			  <th>Index</th>
+		      <th>Vorname</th>
+		      <th>Nachname</th>
+		      <th>Alter</th>
+		    </tr>
+		</thead>
+		<tr th:each="p,index : ${testPersonList}" th:if="${p.alive}">
+	      <td th:text="${index.index}">Index</td>
+	      <td th:text="${p.firstName}">Vorname</td>
+	      <td th:text="${p.lastName}">Nachname</td>
+	      <td th:text="${p.age}">Alter</td>
+	    </tr>
+	</table>
+	
+	<h2>Nur die verstorbenen:</h2>
+	<table border="1">
+		<thead>
+			<tr>
+			  <th>Index</th>
+		      <th>Vorname</th>
+		      <th>Nachname</th>
+		      <th>Alter</th>
+		    </tr>
+		</thead>
+		<tr th:each="p,index : ${testPersonList}" th:object="${p}" th:unless="${p.alive}">
+	      <td th:text="${index.index}">Index</td>
+	      <td th:text="*{firstName}">Vorname</td>
+	      <td th:text="*{lastName}">Nachname</td>
+	      <td th:text="*{age}">Alter</td>
+	    </tr>
+	</table>
+	
+</body>
+</html>
